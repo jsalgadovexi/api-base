@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel
 from typing import Optional
 
@@ -14,6 +15,9 @@ class DatosAlta(BaseModel):
     nombre:str
     comentarios:str
 
+class EmailRequest(BaseModel):
+    email: str
+
 ################################################################################
 ### Clases que se envían
 ################################################################################
@@ -26,3 +30,8 @@ class TestResponse(BaseModel):
     estatus: int
     mensaje: str
     datos: TestData
+
+class EmailResponse(BaseModel):
+    estatus: int
+    mensaje: str
+    id_nuevo_email: int
