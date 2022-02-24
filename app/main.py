@@ -13,7 +13,7 @@ from common.config import ALLOWED_HOSTS, API_PREFIX, DEBUG, JWTSettings
 from db import orm
 
 def get_application() -> FastAPI:
-    application = FastAPI(title="PROYECTO PRUEBA", debug=DEBUG, version="1.0")
+    application = FastAPI(title="VEXI", debug=DEBUG, version="1.0")
 
     application.add_middleware(
         CORSMiddleware,

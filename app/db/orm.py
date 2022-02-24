@@ -1,10 +1,12 @@
 from sqlalchemy import (
+    ForeignKey,
     Table,
     MetaData,
     Column,
     Integer,
     String,
     Date,
+    DateTime,
     null,
 )
 from sqlalchemy.orm import mapper, relationship
@@ -57,15 +59,18 @@ tbl_login = Table(
     "tbl_login",
     metadata,
     Column("id_login", Integer, primary_key=True, autoincrement=True, nullable=False),
-    Column("estatus", String(50), nullable=False, unique=True)
+    Column("id_email", ForeignKey(u'tbl_email.id_email'), nullable=False),
+    Column("codigo", String(4), nullable=False),
+    Column("fecha_acceso", DateTime, nullable=False),
+    Column("veces_login", Integer, nullable=False)
 )
 
 tbl_prospecto = Table(
     "tbl_prospecto",
     metadata,
     Column("id_prospecto", Integer, primary_key=True, autoincrement=True, nullable=False),
-    Column("id_email", Integer, nullable=False),
-    Column("id_estatus_sol", Integer, default=null),
+    Column("id_email", ForeignKey(u'tbl_email.id_email'), nullable=False),
+    Column("id_estatus_sol", ForeignKey(u'cat_estatus_sol.id_estatus'), default=null),
     Column("primer_nombre", String(30), nullable=False),
     Column("segundo_nombre", String(30), default=null),
     Column("ap_paterno", String(50), nullable=False),
@@ -79,7 +84,7 @@ tbl_direccion_sol = Table(
     "tbl_direccion_sol",
     metadata,
     Column("id_direccion", Integer, primary_key=True, autoincrement=True, nullable=False),
-    Column("id_sol", Integer, nullable=False),
+    Column("id_sol", ForeignKey(u'tbl_prospecto.id_prospecto'), nullable=False),
     Column("calle", String(50), nullable=False, unique=True)
 )
 
@@ -88,7 +93,7 @@ tbl_celular = Table(
     metadata,
     Column("id_tel", Integer, primary_key=True, autoincrement=True, nullable=False),
     Column("tel", String(5), nullable=False, unique=True),
-    Column("id_sol", Integer, nullable=False)
+    Column("id_sol", ForeignKey(u'tbl_prospecto.id_prospecto'), nullable=False)
 )
 
 tbl_cliente = Table(
@@ -111,7 +116,7 @@ tbl_direccion_cte = Table(
     "tbl_direccion_cte",
     metadata,
     Column("id_direccion", Integer, primary_key=True, autoincrement=True, nullable=False),
-    Column("id_cliente", Integer),
+    Column("id_cliente", ForeignKey(u'tbl_cliente.id_cliente')),
     Column("calle", String(50), nullable=False, unique=True)
 )
 
@@ -142,7 +147,10 @@ def start_mappers():
 
     mapper(LoginModel, tbl_login, properties={
         'IdLogin': tbl_login.c.id_login,
-        'Estatus': tbl_login.c.estatus
+        'IdEmail': tbl_login.c.id_email,
+        'Codigo': tbl_login.c.codigo,
+        'FechaAcceso': tbl_login.c.fecha_acceso,
+        'VecesLogin': tbl_login.c.veces_login,
     })
 
     mapper(ProspectoModel, tbl_prospecto, properties={

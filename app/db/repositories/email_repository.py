@@ -16,3 +16,5 @@ class EmailRepository(BaseRepository):
         
     def add(self, email_model):
         self.session.add(email_model)
+        self.session.flush()
+        self.session.refresh(email_model)

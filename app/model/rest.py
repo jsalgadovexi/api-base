@@ -18,6 +18,16 @@ class DatosAlta(BaseModel):
 class EmailRequest(BaseModel):
     email: str
 
+class ProspectoRequest(BaseModel):
+    email: str
+    primer_nombre: str
+    segundo_nombre: str
+    ap_paterno: str
+    ap_materno: str
+    CURP: str
+    fecha_nac: date
+    RFC: str
+
 ################################################################################
 ### Clases que se envían
 ################################################################################
@@ -35,3 +45,9 @@ class EmailResponse(BaseModel):
     estatus: int
     mensaje: str
     id_nuevo_email: int
+
+class ProspectoResponse(BaseModel):
+    estatus: int
+    mensaje: str
+    id_prospecto: int
+    id_email: int

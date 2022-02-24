@@ -1,6 +1,7 @@
 from fastapi.applications import FastAPI
 from common.db.unit_of_work import AbstractUnitOfWork, DEFAULT_SESSION_FACTORY
-from db.repositories import email_repository as repository
+from db.repositories.email_repository import EmailRepository
+from db.repositories.prospecto_repository import ProspectoRepository
 
 
 ################################################################################
@@ -13,7 +14,26 @@ class EmailUnitOfWork(AbstractUnitOfWork):
 
     def __enter__(self, session_factory = DEFAULT_SESSION_FACTORY):
         self.session = session_factory(expire_on_commit=False)
-        self.email_repository = repository.EmailRepository(self.session)
+        self.email_repository = EmailRepository(self.session)
+        return self
+
+    def __exit__(self, *args):
+        super().__exit__(*args)
+        self.session.close()  #(3)
+
+    def commit(self):  #(4)
+        self.session.commit()
+
+    def rollback(self):  #(4)
+        self.session.rollback()
+
+class ProspectoUnitOfWork(AbstractUnitOfWork):
+    
+
+    def __enter__(self, session_factory = DEFAULT_SESSION_FACTORY):
+        self.session = session_factory(expire_on_commit=False)
+        self.email_repository = EmailRepository(self.session)
+        self.prospecto_repository = ProspectoRepository(self.session)
         return self
 
     def __exit__(self, *args):

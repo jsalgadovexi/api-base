@@ -18,7 +18,9 @@ import time
 
 from model.rest import (
     EmailRequest,
-    EmailResponse
+    EmailResponse,
+    ProspectoRequest,
+    ProspectoResponse
 )
 
 ################################################################################
@@ -43,4 +45,15 @@ async def registrar_email(data: EmailRequest) -> EmailResponse:
         estatus = 200,
         mensaje = "El email se registro con éxito",
         id_nuevo_email = id_email
+    )
+
+@router.post("/registrar_prospecto", response_model=ProspectoResponse)
+async def registrar_prospecto(prospecto: ProspectoRequest) -> ProspectoResponse:
+    id_email, id_prospecto = handler.registrar_prospecto(prospecto)
+    # import pdb; pdb.set_trace()
+    return ProspectoResponse(
+        estatus = 200,
+        mensaje = 'Prospecto registrado exitosamente',
+        id_email = id_email,
+        id_prospecto = id_prospecto
     )
