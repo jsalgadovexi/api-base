@@ -16,3 +16,5 @@ class ProspectoRepository(BaseRepository):
         
     def add(self, prospecto_model):
         self.session.add(prospecto_model)
+        self.session.flush()
+        self.session.refresh(prospecto_model)

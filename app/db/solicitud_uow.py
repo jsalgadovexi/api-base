@@ -1,5 +1,7 @@
 from fastapi.applications import FastAPI
 from common.db.unit_of_work import AbstractUnitOfWork, DEFAULT_SESSION_FACTORY
+from db.repositories.celular_prospecto_repository import CelularProspectoRepository
+from db.repositories.direccion_prospecto_repository import DireccionProspectoRepository
 from db.repositories.email_repository import EmailRepository
 from db.repositories.prospecto_repository import ProspectoRepository
 
@@ -34,6 +36,8 @@ class ProspectoUnitOfWork(AbstractUnitOfWork):
         self.session = session_factory(expire_on_commit=False)
         self.email_repository = EmailRepository(self.session)
         self.prospecto_repository = ProspectoRepository(self.session)
+        self.celular_repository = CelularProspectoRepository(self.session)
+        self.direccion_repository = DireccionProspectoRepository(self.session)
         return self
 
     def __exit__(self, *args):

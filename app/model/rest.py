@@ -27,6 +27,8 @@ class ProspectoRequest(BaseModel):
     CURP: str
     fecha_nac: date
     RFC: str
+    telefono: str
+    calle: str
 
 ################################################################################
 ### Clases que se envían
@@ -51,3 +53,5 @@ class ProspectoResponse(BaseModel):
     mensaje: str
     id_prospecto: int
     id_email: int
+    id_celular: int
+    id_direccion: int

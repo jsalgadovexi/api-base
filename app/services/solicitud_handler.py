@@ -5,6 +5,8 @@ from loguru import logger
 from starlette import status
 
 from db.solicitud_uow import EmailUnitOfWork, ProspectoUnitOfWork
+from model.domain.celular_prospecto_model import CelularProspectoModel
+from model.domain.direccion_prospecto_model import DireccionProspectoModel
 
 from model.domain.email_model import EmailModel
 
@@ -38,6 +40,9 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
             # import pdb; pdb.set_trace()
             new_model_email = EmailModel()
             new_model_prospecto = ProspectoModel()
+            new_model_celular = CelularProspectoModel()
+            new_model_direccion = DireccionProspectoModel()
+
             SOLICITUD_EN_PROCESO = 1
 
             new_model_email.Email = prospecto.email
@@ -55,8 +60,17 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
             
             new_model_prospecto.IdEmail = new_model_email.IdEmail
             uow.prospecto_repository.add(new_model_prospecto)
+
+            new_model_celular.Telefono = prospecto.telefono
+            new_model_celular.IdSolicitud = new_model_prospecto.IdProspecto
+            uow.celular_repository.add(new_model_celular)
+
+            new_model_direccion.Calle = prospecto.calle
+            new_model_direccion.IdSolicitud = new_model_prospecto.IdProspecto
+            uow.direccion_repository.add(new_model_direccion)
+
             uow.commit()
-        return [new_model_email.IdEmail, new_model_prospecto.IdProspecto]
+        return [new_model_email.IdEmail, new_model_prospecto.IdProspecto, new_model_celular.IdTelefono, new_model_direccion.IdDireccion]
     except Exception as exc:
         logger.exception(exc)
         raise HTTPException(

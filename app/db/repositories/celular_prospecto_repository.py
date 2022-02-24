@@ -16,3 +16,5 @@ class CelularProspectoRepository(BaseRepository):
         
     def add(self, celular_prospecto_model):
         self.session.add(celular_prospecto_model)
+        self.session.flush()
+        self.session.refresh(celular_prospecto_model)
