@@ -16,3 +16,5 @@ class EstatusSolicitudRepository(BaseRepository):
         
     def add(self, estatus_solicitud_model):
         self.session.add(estatus_solicitud_model)
+        self.session.flush()
+        self.session.refresh(estatus_solicitud_model)

@@ -16,3 +16,5 @@ class ClienteRepository(BaseRepository):
         
     def add(self, cliente_model):
         self.session.add(cliente_model)
+        self.session.flush()
+        self.session.refresh(cliente_model)

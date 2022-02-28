@@ -16,3 +16,5 @@ class DireccionClienteRepository(BaseRepository):
         
     def add(self, direccion_cliente_model):
         self.session.add(direccion_cliente_model)
+        self.session.flush()
+        self.session.refresh(direccion_cliente_model)

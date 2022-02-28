@@ -16,3 +16,5 @@ class LoginRepository(BaseRepository):
         
     def add(self, login_model):
         self.session.add(login_model)
+        self.session.flush()
+        self.session.refresh(login_model)
