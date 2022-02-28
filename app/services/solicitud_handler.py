@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from operator import ne
 from typing import Any, List
 from fastapi import HTTPException
@@ -12,6 +13,7 @@ from model.domain.email_model import EmailModel
 
 import requests
 from model.domain.prospecto_model import ProspectoModel
+from model.errors import FormatException
 
 from model.rest import ProspectoRequest
 
@@ -46,6 +48,8 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
             SOLICITUD_EN_PROCESO = 1
 
             new_model_email.Email = prospecto.email
+            if not new_model_email.email_valido():
+                raise ValueError("El formato del correo no es válido")
 
             new_model_prospecto.PrimerNombre = prospecto.primer_nombre
             new_model_prospecto.SegundoNombre = prospecto.segundo_nombre
@@ -62,6 +66,8 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
             uow.prospecto_repository.add(new_model_prospecto)
 
             new_model_celular.Telefono = prospecto.telefono
+            if not new_model_celular.celular_valido():
+                raise FormatException("El celular debe tener únicamente números y un máximo de 5 dígitos")
             new_model_celular.IdSolicitud = new_model_prospecto.IdProspecto
             uow.celular_repository.add(new_model_celular)
 
@@ -71,8 +77,20 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
 
             uow.commit()
         return [new_model_email.IdEmail, new_model_prospecto.IdProspecto, new_model_celular.IdTelefono, new_model_direccion.IdDireccion]
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except FormatException as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     except Exception as exc:
-        logger.exception(exc)
+        # logger.exception(exc)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(exc),
