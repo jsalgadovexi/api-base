@@ -31,6 +31,10 @@ class FormatException(Exception):
     def __init__(self, description: str):
         self.description = description
 
+class UnauthorizedException(Exception):
+    def __init__(self, description: str):
+        self.description = description
+
 async def http420_error_handler(
     _: Request, exc: EntityNotFoundException
 ) -> JSONResponse:

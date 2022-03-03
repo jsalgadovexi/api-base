@@ -12,7 +12,10 @@ class EmailRepository(BaseRepository):
         self.session = session
 
     def get(self, id: int) -> Any:
-        return self.session.query(EmailModel).filter_by(Id=id).first()
+        return self.session.query(EmailModel).filter_by(IdEmail=id).first()
+
+    def get_by_email(self, email: str) -> Any:
+        return self.session.query(EmailModel).filter_by(Email=email).first()
         
     def add(self, email_model):
         self.session.add(email_model)

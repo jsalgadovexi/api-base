@@ -1,6 +1,7 @@
 from datetime import date
 from pydantic import BaseModel
 from typing import Optional
+from pydantic import BaseModel
 
 ################################################################################
 ### Clases que se reciben
@@ -30,6 +31,9 @@ class ProspectoRequest(BaseModel):
     telefono: str
     calle: str
 
+class LoginRequest(BaseModel):
+    codigo: str
+
 ################################################################################
 ### Clases que se envían
 ################################################################################
@@ -55,3 +59,13 @@ class ProspectoResponse(BaseModel):
     id_email: int
     id_celular: int
     id_direccion: int
+
+class CodigoResponse(BaseModel):
+    estatus: int
+    mensaje: str
+    codigo: str
+
+class LoginResponse(BaseModel):
+    estatus: int
+    mensaje: str
+    prospecto: int
