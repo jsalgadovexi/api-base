@@ -16,6 +16,7 @@ from model.domain.prospecto_model import ProspectoModel
 from model.errors import FormatException
 
 from model.rest import ProspectoRequest
+from services.constants import SOLICITUD_EN_PROCESO
 
 HTTP_SESSION = requests.Session()
 
@@ -44,8 +45,6 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
             new_model_prospecto = ProspectoModel()
             new_model_celular = CelularProspectoModel()
             new_model_direccion = DireccionProspectoModel()
-
-            SOLICITUD_EN_PROCESO = 1
 
             new_model_email.Email = prospecto.email
             if not new_model_email.email_valido():

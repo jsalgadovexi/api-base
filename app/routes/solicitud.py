@@ -5,11 +5,14 @@ from pydantic.error_wrappers import ValidationError
 from starlette.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from model.errors import EntityNotFoundException
 from model.errors import NotFoundMessage
+from routes.validator import ValidateEmail
 from services import solicitud_handler as handler
 from fastapi import Request
 from fastapi_jwt_auth import AuthJWT
 from common.api.responses import responses as HTTP_RESPONSES
 import time
+
+validation_email = ValidateEmail("email")
 
 ################################################################################
 ### En app/model/rest.py se definen los modelos que servirán para comunicarse
@@ -45,6 +48,14 @@ async def registrar_email(data: EmailRequest) -> EmailResponse:
         estatus = 200,
         mensaje = "El email se registro con éxito",
         id_nuevo_email = id_email
+    )
+
+@router.post("/validar_email/{email}", response_model=EmailResponse, dependencies=[Depends(validation_email)])
+async def validar_email(email: str) -> EmailResponse:
+    return EmailResponse(
+        estatus = 200,
+        mensaje = "El email se valido con éxito",
+        id_nuevo_email = 0
     )
 
 @router.post("/registrar_prospecto", response_model=ProspectoResponse)

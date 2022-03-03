@@ -1,7 +1,6 @@
 import re
-# Make a regular expression for validating an Email
-regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
+from services.constants import REGEX_EMAIL
 class EmailModel:
     def __init__(self):
         self.IdEmail: int
@@ -9,7 +8,7 @@ class EmailModel:
 
     # Define a function for validating an Email
     def email_valido(self) -> bool:
-        if(re.fullmatch(regex, self.Email)):
+        if(re.fullmatch(REGEX_EMAIL, self.Email)):
             return True
         else:
             return False

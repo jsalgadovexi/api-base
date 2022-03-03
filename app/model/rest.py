@@ -1,5 +1,5 @@
 from datetime import date
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from pydantic import BaseModel
 
@@ -11,6 +11,10 @@ class TestRequest(BaseModel):
     primer_campo: str
     segundo_campo: str
     tercer_campo: Optional[str] = None
+    estatus: Optional[int] = Field(1, title = "Estatus de la solicitud", description= "Estatus en la que se encuentra la solicitud del prospecto.")
+
+class EstatusRequest(BaseModel):
+    estatus: Optional[int] = Field(1, title = "Estatus de la solicitud", description= "Estatus en la que se encuentra la solicitud del prospecto.")
 
 class DatosAlta(BaseModel):
     nombre:str
