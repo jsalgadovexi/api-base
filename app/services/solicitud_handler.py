@@ -13,7 +13,7 @@ from model.domain.email_model import EmailModel
 
 import requests
 from model.domain.prospecto_model import ProspectoModel
-from model.errors import FormatException
+from model.errors import FormatException, RulesBussinessException
 
 from model.rest import ProspectoRequest
 from services.constants import SOLICITUD_EN_PROCESO
@@ -55,6 +55,8 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
             new_model_prospecto.ApellidoPaterno = prospecto.ap_paterno
             new_model_prospecto.ApellidoMaterno = prospecto.ap_materno
             new_model_prospecto.FechaNacimiento = prospecto.fecha_nac
+            if not new_model_prospecto.validar_edad():
+                raise RulesBussinessException("El prospecto no cumple con la edad permitida")
             new_model_prospecto.RFC = prospecto.RFC
             new_model_prospecto.CURP = prospecto.CURP
             new_model_prospecto.IdEstatusSolicitud = SOLICITUD_EN_PROCESO
@@ -66,7 +68,7 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
 
             new_model_celular.Telefono = prospecto.telefono
             if not new_model_celular.celular_valido():
-                raise FormatException("El celular debe tener únicamente números y un máximo de 5 dígitos")
+                raise FormatException("El celular debe tener únicamente números y un máximo de 10 dígitos")
             new_model_celular.IdSolicitud = new_model_prospecto.IdProspecto
             uow.celular_repository.add(new_model_celular)
 
@@ -85,6 +87,13 @@ def registrar_prospecto(prospecto: ProspectoRequest)->List[int]:
     except FormatException as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except RulesBussinessException as exc:
+        # logger.exception(exc)
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
             headers={"WWW-Authenticate": "Bearer"},
         )

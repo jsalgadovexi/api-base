@@ -5,7 +5,7 @@ class CelularProspectoModel:
         self.IdSolicitud: int
 
     def celular_valido(self) -> bool:
-        if(len(self.Telefono) == 5 and self.Telefono.isdigit()):
+        if(len(self.Telefono) == 10 and self.Telefono.isdigit()):
             return True
         else:
             return False
